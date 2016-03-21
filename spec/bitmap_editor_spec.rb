@@ -13,6 +13,12 @@ def create_3_by_3_image
   @editor.run
 end
 
+def create_5_by_6_image
+  prepare_for_command 'I 5 6'
+  expect(STDOUT).to receive(:puts).with('Image created').ordered
+  @editor.run
+end
+
 describe 'bitmap_editor' do
 
   before do
@@ -50,7 +56,7 @@ describe 'bitmap_editor' do
     @editor.run
   end
 
-  it 'should color a pixel when input command is L with invalid input' do
+  it 'should not color a pixel when input command is L with invalid input' do
     create_3_by_3_image
     prepare_for_command 'L 2 2'
     expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
@@ -62,7 +68,7 @@ describe 'bitmap_editor' do
     @editor.run
   end
 
-  it 'should color a pixel when input command is L with out of bounds input' do
+  it 'should not color a pixel when input command is L with out of bounds input' do
     create_3_by_3_image
     prepare_for_command 'L 2 4 R'
     expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
@@ -81,6 +87,16 @@ describe 'bitmap_editor' do
 
     prepare_for_command 'S'
     expect(STDOUT).to receive(:puts).with("OOO\nOBO\nOOO").ordered
+    @editor.run
+  end
+
+  it 'should color a pixel when input command is L with valid input (larger)' do
+    create_5_by_6_image
+    prepare_for_command 'L 2 3 A'
+    @editor.run
+
+    prepare_for_command 'S'
+    expect(STDOUT).to receive(:puts).with("OOOOO\nOOOOO\nOAOOO\nOOOOO\nOOOOO\nOOOOO").ordered
     @editor.run
   end
 
@@ -103,7 +119,7 @@ describe 'bitmap_editor' do
     @editor.run
   end
 
-  it 'should color the image row when input command is H with valid input' do
+  it 'should color color not color a horizontal line when input command is H with valid input' do
     create_3_by_3_image
     prepare_for_command 'H 1 3 2 B'
     @editor.run
@@ -113,7 +129,7 @@ describe 'bitmap_editor' do
     @editor.run
   end
 
-  it 'should color a pixel when input command is H with out of bounds input' do
+  it 'should not color color not color a horizontal line when input command is H with out of bounds input' do
     create_3_by_3_image
     prepare_for_command 'H 4 4 4 V'
     expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
@@ -125,7 +141,7 @@ describe 'bitmap_editor' do
     @editor.run
   end
 
-  it 'should color a pixel when input command is H with invalid input' do
+  it 'should not color not color a horizontal line when input command is H with invalid input' do
     create_3_by_3_image
     prepare_for_command 'H 4 4 V'
     expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
@@ -143,9 +159,9 @@ describe 'bitmap_editor' do
     @editor.run
   end
 
-  it 'should color the image column when input command is V with valid input' do
+  it 'should not color a vertical line when input command is V with valid input' do
     create_3_by_3_image
-    prepare_for_command 'V 1 3 2 B'
+    prepare_for_command 'V 2 1 3 B'
     @editor.run
 
     prepare_for_command 'S'
@@ -153,7 +169,7 @@ describe 'bitmap_editor' do
     @editor.run
   end
 
-  it 'should color a pixel when input command is V with out of bounds input' do
+  it 'should not color a vertical line when input command is V with out of bounds input' do
     create_3_by_3_image
     prepare_for_command 'V 4 4 4 V'
     expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
@@ -165,7 +181,7 @@ describe 'bitmap_editor' do
     @editor.run
   end
 
-  it 'should color a pixel when input command is V with invalid input' do
+  it 'should not color a vertical line when input command is V with invalid input' do
     create_3_by_3_image
     prepare_for_command 'V 4 4 V'
     expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
@@ -177,13 +193,26 @@ describe 'bitmap_editor' do
     @editor.run
   end
 
+  it 'should perform the right actions for V command followed by H command' do
+    create_5_by_6_image
+    prepare_for_command 'V 2 3 6 W'
+    @editor.run
+
+    prepare_for_command 'H 3 5 2 Z'
+    @editor.run
+
+    prepare_for_command 'S'
+    expect(STDOUT).to receive(:puts).with("OOOOO\nOOZZZ\nOWOOO\nOWOOO\nOWOOO\nOWOOO").ordered
+    @editor.run
+  end
+
   it 'should show an error when performing command F before an image is created' do
     prepare_for_command 'F 2 2 B'
     expect(STDOUT).to receive(:puts).with("ERROR: you haven't created an image yet!").ordered
     @editor.run
   end
 
-  it 'should color the image column when input command is F with valid input' do
+  it 'should color the correct range when performing the F command with valid input' do
     create_3_by_3_image
     prepare_for_command 'F 2 2 B'
     @editor.run

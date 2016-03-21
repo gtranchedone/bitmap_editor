@@ -52,7 +52,8 @@ class BitmapEditor
 
     def create_image(params)
       if valid_params?(params)
-        @image = BitmapImage.new(params[1].to_i, params[2].to_i)
+        # parameters start with are columns and rows
+        @image = BitmapImage.new(params[2].to_i, params[1].to_i)
         puts 'Image created'
       else
         show_invalid_params_help
@@ -85,8 +86,8 @@ class BitmapEditor
       if @image.nil?
         show_message_for_no_image
       else
-        # parameters start with are start_row, end_row, column, color
-        unless @image.color_column(params[3].to_i, params[1].to_i, params[2].to_i, params[4])
+        # parameters start with are column, start_row, end_row, color
+        unless @image.color_column(params[1].to_i, params[2].to_i, params[3].to_i, params[4])
           show_invalid_params_help
         end
       end
