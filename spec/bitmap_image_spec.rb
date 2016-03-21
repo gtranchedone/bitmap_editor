@@ -204,4 +204,71 @@ describe 'bitmap_image' do
     expect(@image.color_column(3, 1, 4, 'r')).to be_falsey
     expect(@image.to_s).to eq "OOO\nOOO\nOOO"
   end
+
+  # Color Region
+
+  it 'should not color a region if pixel has row <= 0' do
+    expect(@image.color_region(0, 2, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not color a region if pixel has row > size' do
+    expect(@image.color_region(4, 2, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not color a region if pixel has column <= 0' do
+    expect(@image.color_region(2, 0, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not color a region if pixel has column > size' do
+    expect(@image.color_region(2, 4, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should color a region by coloring a pixel and its neighbours (center)' do
+    expect(@image.color_region(2, 2, 'r')).to be_truthy
+    expect(@image.to_s).to eq "ORO\nRRR\nORO"
+  end
+
+  it 'should color a region by coloring a pixel and its neighbours (top left corner)' do
+    expect(@image.color_region(1, 1, 'r')).to be_truthy
+    expect(@image.to_s).to eq "RRO\nROO\nOOO"
+  end
+
+  it 'should color a region by coloring a pixel and its neighbours (top right corner)' do
+    expect(@image.color_region(1, 3, 'r')).to be_truthy
+    expect(@image.to_s).to eq "ORR\nOOR\nOOO"
+  end
+
+  it 'should color a region by coloring a pixel and its neighbours (bottom left corner)' do
+    expect(@image.color_region(3, 1, 'r')).to be_truthy
+    expect(@image.to_s).to eq "OOO\nROO\nRRO"
+  end
+
+  it 'should color a region by coloring a pixel and its neighbours (bottom right corner)' do
+    expect(@image.color_region(3, 3, 'r')).to be_truthy
+    expect(@image.to_s).to eq "OOO\nOOR\nORR"
+  end
+
+  it 'should color a region by coloring a pixel and its neighbours (middle top side)' do
+    expect(@image.color_region(1, 2, 'r')).to be_truthy
+    expect(@image.to_s).to eq "RRR\nORO\nOOO"
+  end
+
+  it 'should color a region by coloring a pixel and its neighbours (middle bottom side)' do
+    expect(@image.color_region(3, 2, 'r')).to be_truthy
+    expect(@image.to_s).to eq "OOO\nORO\nRRR"
+  end
+
+  it 'should color a region by coloring a pixel and its neighbours (middle left side)' do
+    expect(@image.color_region(2, 1, 'r')).to be_truthy
+    expect(@image.to_s).to eq "ROO\nRRO\nROO"
+  end
+
+  it 'should color a region by coloring a pixel and its neighbours (middle right side)' do
+    expect(@image.color_region(2, 3, 'r')).to be_truthy
+    expect(@image.to_s).to eq "OOR\nORR\nOOR"
+  end
 end

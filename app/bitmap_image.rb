@@ -37,6 +37,15 @@ class BitmapImage
     true
   end
 
+  def color_region(row, column, color = 'O')
+    return false unless color_pixel row, column, color
+    color_pixel row - 1, column, color
+    color_pixel row, column - 1, color
+    color_pixel row + 1, column, color
+    color_pixel row, column + 1, color
+    true
+  end
+
   def clear
     (0...@representation.count).each do |row_index|
       row = @representation[row_index]
