@@ -98,14 +98,14 @@ describe 'bitmap_editor' do
   end
 
   it 'should show an error when performing command H before an image is created' do
-    prepare_for_command 'H 2 1 3 B'
+    prepare_for_command 'H 1 3 2 B'
     expect(STDOUT).to receive(:puts).with("ERROR: you haven't created an image yet!").ordered
     @editor.run
   end
 
   it 'should color the image row when input command is H with valid input' do
     create_3_by_3_image
-    prepare_for_command 'H 2 1 3 B'
+    prepare_for_command 'H 1 3 2 B'
     @editor.run
 
     prepare_for_command 'S'
@@ -138,14 +138,14 @@ describe 'bitmap_editor' do
   end
 
   it 'should show an error when performing command V before an image is created' do
-    prepare_for_command 'V 2 1 3 B'
+    prepare_for_command 'V 1 3 2 B'
     expect(STDOUT).to receive(:puts).with("ERROR: you haven't created an image yet!").ordered
     @editor.run
   end
 
   it 'should color the image column when input command is V with valid input' do
     create_3_by_3_image
-    prepare_for_command 'V 2 1 3 B'
+    prepare_for_command 'V 1 3 2 B'
     @editor.run
 
     prepare_for_command 'S'

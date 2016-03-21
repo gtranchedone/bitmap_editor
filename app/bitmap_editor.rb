@@ -63,7 +63,8 @@ class BitmapEditor
       if @image.nil?
         show_message_for_no_image
       else
-        unless @image.color_pixel(params[1].to_i, params[2].to_i, params[3])
+        # parameters start with are column, row, color
+        unless @image.color_pixel(params[2].to_i, params[1].to_i, params[3])
           show_invalid_params_help
         end
       end
@@ -73,7 +74,8 @@ class BitmapEditor
       if @image.nil?
         show_message_for_no_image
       else
-        unless @image.color_row(params[1].to_i, params[2].to_i, params[3].to_i, params[4])
+        # parameters start with are start_column, end_column, row, color
+        unless @image.color_row(params[3].to_i, params[1].to_i, params[2].to_i, params[4])
           show_invalid_params_help
         end
       end
@@ -83,7 +85,8 @@ class BitmapEditor
       if @image.nil?
         show_message_for_no_image
       else
-        unless @image.color_column(params[1].to_i, params[2].to_i, params[3].to_i, params[4])
+        # parameters start with are start_row, end_row, column, color
+        unless @image.color_column(params[3].to_i, params[1].to_i, params[2].to_i, params[4])
           show_invalid_params_help
         end
       end
@@ -93,7 +96,8 @@ class BitmapEditor
       if @image.nil?
         show_message_for_no_image
       else
-        @image.color_region(params[1].to_i, params[2].to_i, params[3])
+        # parameters start with are column, row
+        @image.color_region(params[2].to_i, params[1].to_i, params[3])
       end
     end
 
