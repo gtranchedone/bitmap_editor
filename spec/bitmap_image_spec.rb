@@ -106,4 +106,10 @@ describe 'bitmap_image' do
     expect(image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
+  it 'should not allow coloring a pixel for non string colors' do
+    image = BitmapImage.new(3, 3)
+    image.color_pixel(2, 3, 5)
+    expect(image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
 end

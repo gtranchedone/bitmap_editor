@@ -15,12 +15,11 @@ class BitmapImage
   def color_pixel(row, column, color)
     row = row.to_i
     column = column.to_i
-    if row > 0 && row <= @representation.count
-      actual_row = @representation[row - 1]
-      if column > 0 && column <= actual_row.count
-        actual_row[column - 1] = color.upcase
-      end
+    unless color.is_a?(String) && !out_of_bounds?(row, column)
+      return
     end
+    actual_row = @representation[row - 1]
+    actual_row[column - 1] = color.upcase
   end
 
   def empty?
@@ -37,4 +36,16 @@ class BitmapImage
     end
     s.chomp
   end
+
+  private
+
+    def out_of_bounds?(row, column)
+      if row > 0 && row <= @representation.count
+        actual_row = @representation[row - 1]
+        if column > 0 && column <= actual_row.count
+          return false
+        end
+      end
+      true
+    end
 end
