@@ -71,44 +71,45 @@ describe 'bitmap_image' do
     expect(image.to_s).to eq ("#{'O' * m}\n" * n).chomp
   end
 
-  it 'does not crash if created with invalid parameters' do
-    image = BitmapImage.new('foo', 'bar')
-    expect(image.to_s).to eq 'Empty image'
-  end
-
   it 'should allow coloring a pixel' do
     image = BitmapImage.new(3, 3)
-    image.color_pixel(2, 2, 'r')
+    expect(image.color_pixel(2, 2, 'r')).to be_truthy
     expect(image.to_s).to eq "OOO\nORO\nOOO"
   end
 
   it 'should not allow coloring a pixel with row out of bounds' do
     image = BitmapImage.new(3, 3)
-    image.color_pixel(-2, 2, 'R')
+    expect(image.color_pixel(-2, 2, 'R')).to be_falsey
     expect(image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
   it 'should not allow coloring a pixel with column out of bounds' do
     image = BitmapImage.new(3, 3)
-    image.color_pixel(2, -2, 'R')
+    expect(image.color_pixel(2, -2, 'R')).to be_falsey
     expect(image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
   it 'should not allow coloring a pixel with row out of bounds for excess' do
     image = BitmapImage.new(3, 3)
-    image.color_pixel(4, 2, 'R')
+    expect(image.color_pixel(4, 2, 'R')).to be_falsey
     expect(image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
   it 'should not allow coloring a pixel with column out of bounds for excess' do
     image = BitmapImage.new(3, 3)
-    image.color_pixel(2, 4, 'R')
+    expect(image.color_pixel(2, 4, 'R')).to be_falsey
     expect(image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
   it 'should not allow coloring a pixel for non string colors' do
     image = BitmapImage.new(3, 3)
-    image.color_pixel(2, 3, 5)
+    expect(image.color_pixel(2, 3, 5)).to be_falsey
+    expect(image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a pixel for colors represented by long strings' do
+    image = BitmapImage.new(3, 3)
+    expect(image.color_pixel(2, 3, 'ab')).to be_falsey
     expect(image.to_s).to eq "OOO\nOOO\nOOO"
   end
 

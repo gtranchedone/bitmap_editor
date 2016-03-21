@@ -1,7 +1,7 @@
 require 'rspec'
 require_relative '../app/bitmap_editor'
 
-describe 'editor' do
+describe 'bitmap_editor' do
 
   before do
     @editor = BitmapEditor.new

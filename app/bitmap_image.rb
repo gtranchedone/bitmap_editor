@@ -1,8 +1,8 @@
 class BitmapImage
+  MAX_SIZE = 250
+
   def initialize(rows, columns)
-    rows = rows.to_i
-    columns = columns.to_i
-    if rows > 0 && rows <= 250 && columns > 0 && columns <= 250
+    if rows > 0 && rows <= MAX_SIZE && columns > 0 && columns <= MAX_SIZE
       @representation = Array.new(rows, 'O')
       (0...rows).each do |row|
         @representation[row] = Array.new(columns, 'O')
@@ -13,13 +13,10 @@ class BitmapImage
   end
 
   def color_pixel(row, column, color)
-    row = row.to_i
-    column = column.to_i
-    unless color.is_a?(String) && !out_of_bounds?(row, column)
-      return
-    end
+    return false unless valid_params(row, column, color)
     actual_row = @representation[row - 1]
     actual_row[column - 1] = color.upcase
+    true
   end
 
   def clear
@@ -47,6 +44,12 @@ class BitmapImage
   end
 
   private
+    def valid_params(row, column, color = '')
+      return false unless row.is_a? Integer
+      return false unless column.is_a? Integer
+      return false unless color.is_a?(String) && color.length == 1
+      !out_of_bounds?(row, column)
+    end
 
     def out_of_bounds?(row, column)
       if row > 0 && row <= @representation.count

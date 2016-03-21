@@ -36,24 +36,29 @@ class BitmapEditor
       input.split(' ')
     end
 
+    def valid_params?(params)
+      rows     = params[1].to_i
+      cols     = params[2].to_i
+      max_size = BitmapImage::MAX_SIZE
+      rows > 0 && rows <= max_size && cols > 0 && cols <= max_size
+    end
+
     def create_image(params)
-      if params.count < 3
-        puts 'Invalid parameters. Usage:'
-        show_help
-      else
-        @image = BitmapImage.new(params[1], params[2])
+      if valid_params?(params)
+        @image = BitmapImage.new(params[1].to_i, params[2].to_i)
         puts 'Image created'
+      else
+        show_invalid_params_help
       end
     end
 
     def color_pixel(params)
-      if params.count < 4
-        puts 'Invalid parameters. Usage:'
-        show_help
-      elsif @image.nil?
+      if @image.nil?
         show_message_for_no_image
       else
-        @image.color_pixel(params[1], params[2], params[3])
+        unless @image.color_pixel(params[1].to_i, params[2].to_i, params[3])
+          show_invalid_params_help
+        end
       end
     end
 
@@ -67,6 +72,11 @@ class BitmapEditor
 
     def show_message_for_no_image
       puts 'No image created'
+    end
+
+    def show_invalid_params_help
+      puts 'Invalid parameters. Usage:'
+      show_help
     end
 
     def exit_console
