@@ -42,7 +42,8 @@ class BitmapEditor
       input.split(' ')
     end
 
-    def valid_params?(params)
+    def valid_params?(params, min_count = 2)
+      return false if params.count < min_count
       rows     = params[1].to_i
       cols     = params[2].to_i
       max_size = BitmapImage::MAX_SIZE
@@ -72,7 +73,9 @@ class BitmapEditor
       if @image.nil?
         show_message_for_no_image
       else
-        @image.color_row(params[1].to_i, params[2].to_i, params[3].to_i, params[4])
+        unless @image.color_row(params[1].to_i, params[2].to_i, params[3].to_i, params[4])
+          show_invalid_params_help
+        end
       end
     end
 
@@ -80,7 +83,9 @@ class BitmapEditor
       if @image.nil?
         show_message_for_no_image
       else
-        @image.color_column(params[1].to_i, params[2].to_i, params[3].to_i, params[4])
+        unless @image.color_column(params[1].to_i, params[2].to_i, params[3].to_i, params[4])
+          show_invalid_params_help
+        end
       end
     end
 

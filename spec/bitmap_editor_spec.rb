@@ -62,6 +62,18 @@ describe 'bitmap_editor' do
     @editor.run
   end
 
+  it 'should color a pixel when input command is L with out of bounds input' do
+    create_3_by_3_image
+    prepare_for_command 'L 2 4 R'
+    expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
+    expect(STDOUT).to receive(:puts).with(/Help/).ordered
+    @editor.run
+
+    prepare_for_command 'S'
+    expect(STDOUT).to receive(:puts).with("OOO\nOOO\nOOO").ordered
+    @editor.run
+  end
+
   it 'should color a pixel when input command is L with valid input' do
     create_3_by_3_image
     prepare_for_command 'L 2 2 B'
@@ -101,6 +113,30 @@ describe 'bitmap_editor' do
     @editor.run
   end
 
+  it 'should color a pixel when input command is H with out of bounds input' do
+    create_3_by_3_image
+    prepare_for_command 'H 4 4 4 V'
+    expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
+    expect(STDOUT).to receive(:puts).with(/Help/).ordered
+    @editor.run
+
+    prepare_for_command 'S'
+    expect(STDOUT).to receive(:puts).with("OOO\nOOO\nOOO").ordered
+    @editor.run
+  end
+
+  it 'should color a pixel when input command is H with invalid input' do
+    create_3_by_3_image
+    prepare_for_command 'H 4 4 V'
+    expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
+    expect(STDOUT).to receive(:puts).with(/Help/).ordered
+    @editor.run
+
+    prepare_for_command 'S'
+    expect(STDOUT).to receive(:puts).with("OOO\nOOO\nOOO").ordered
+    @editor.run
+  end
+
   it 'should show an error when performing command V before an image is created' do
     prepare_for_command 'V 2 1 3 B'
     expect(STDOUT).to receive(:puts).with("ERROR: you haven't created an image yet!").ordered
@@ -114,6 +150,30 @@ describe 'bitmap_editor' do
 
     prepare_for_command 'S'
     expect(STDOUT).to receive(:puts).with("OBO\nOBO\nOBO").ordered
+    @editor.run
+  end
+
+  it 'should color a pixel when input command is V with out of bounds input' do
+    create_3_by_3_image
+    prepare_for_command 'V 4 4 4 V'
+    expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
+    expect(STDOUT).to receive(:puts).with(/Help/).ordered
+    @editor.run
+
+    prepare_for_command 'S'
+    expect(STDOUT).to receive(:puts).with("OOO\nOOO\nOOO").ordered
+    @editor.run
+  end
+
+  it 'should color a pixel when input command is V with invalid input' do
+    create_3_by_3_image
+    prepare_for_command 'V 4 4 V'
+    expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
+    expect(STDOUT).to receive(:puts).with(/Help/).ordered
+    @editor.run
+
+    prepare_for_command 'S'
+    expect(STDOUT).to receive(:puts).with("OOO\nOOO\nOOO").ordered
     @editor.run
   end
 
