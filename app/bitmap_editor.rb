@@ -19,6 +19,12 @@ class BitmapEditor
           create_image params
         when 'L'
           color_pixel params
+        when 'H'
+          color_row params
+        when 'V'
+          color_column params
+        when 'F'
+          color_region params
         when 'C'
           clear_image
         else
@@ -62,6 +68,30 @@ class BitmapEditor
       end
     end
 
+    def color_row(params)
+      if @image.nil?
+        show_message_for_no_image
+      else
+        @image.color_row(params[1].to_i, params[2].to_i, params[3].to_i, params[4])
+      end
+    end
+
+    def color_column(params)
+      if @image.nil?
+        show_message_for_no_image
+      else
+        @image.color_column(params[1].to_i, params[2].to_i, params[3].to_i, params[4])
+      end
+    end
+
+    def color_region(params)
+      if @image.nil?
+        show_message_for_no_image
+      else
+        @image.color_region(params[1].to_i, params[2].to_i, params[3])
+      end
+    end
+
     def clear_image
       @image.clear unless @image.nil?
     end
@@ -71,7 +101,7 @@ class BitmapEditor
     end
 
     def show_message_for_no_image
-      puts 'No image created'
+      puts "ERROR: you haven't created an image yet!"
     end
 
     def show_invalid_params_help
