@@ -122,6 +122,7 @@ class BitmapEditor
     def show_help
       puts '? - Help
 An image needs to have at least 1 row and column and at most 250 rows and columns.
+Rows and columns start at index 1 and end at index N.
 I M N - Create a new M x N image with all pixels coloured white (O).
 C - Clears the table, setting all pixels to white (O).
 L X Y C - Colours the pixel (X,Y) with colour C.

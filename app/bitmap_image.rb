@@ -1,6 +1,7 @@
 class BitmapImage
   MAX_SIZE = 250
   DEFAULT_COLOR = 'O'
+  VALID_COLOR_REGEX = /\A\D\z/
 
   def initialize(rows, columns)
     if rows > 0 && rows <= MAX_SIZE && columns > 0 && columns <= MAX_SIZE
@@ -74,7 +75,7 @@ class BitmapImage
     def valid_params(row, column, color = DEFAULT_COLOR)
       return false unless row.is_a? Integer
       return false unless column.is_a? Integer
-      return false unless color.is_a?(String) && color.length == 1
+      return false unless color.is_a?(String) && color.match(VALID_COLOR_REGEX)
       !out_of_bounds?(row, column)
     end
 

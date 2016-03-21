@@ -109,6 +109,11 @@ describe 'bitmap_image' do
     expect(@image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
+  it 'should not allow coloring a pixel for string colors that do not contain letters' do
+    expect(@image.color_pixel(2, 3, '5')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
   it 'should not allow coloring a pixel for colors represented by long strings' do
     expect(@image.color_pixel(2, 3, 'ab')).to be_falsey
     expect(@image.to_s).to eq "OOO\nOOO\nOOO"
