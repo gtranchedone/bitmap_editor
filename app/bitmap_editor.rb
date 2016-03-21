@@ -17,6 +17,8 @@ class BitmapEditor
           show_image
         when 'I'
           create_image params
+        when 'L'
+          color_pixel params
         else
           puts 'unrecognised command :('
       end
@@ -42,8 +44,23 @@ class BitmapEditor
       end
     end
 
+    def color_pixel(params)
+      if params.count < 4
+        puts 'Invalid parameters. Usage:'
+        show_help
+      elsif @image.nil?
+        show_message_for_no_image
+      else
+        @image.color_pixel(params[1], params[2], params[3])
+      end
+    end
+
     def show_image
-      puts @image.nil? ? 'No image created' : @image.to_s
+      @image.nil? ? show_message_for_no_image : puts(@image.to_s)
+    end
+
+    def show_message_for_no_image
+      puts 'No image created'
     end
 
     def exit_console
@@ -53,6 +70,7 @@ class BitmapEditor
 
     def show_help
       puts '? - Help
+An image needs to have at least 1 row and column and at most 250 rows and columns.
 I M N - Create a new M x N image with all pixels coloured white (O).
 C - Clears the table, setting all pixels to white (O).
 L X Y C - Colours the pixel (X,Y) with colour C.

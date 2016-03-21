@@ -13,6 +13,16 @@ describe 'bitmap_image' do
     expect(image.empty?).to be_truthy
   end
 
+  it 'is empty if has too many rows' do
+    image = BitmapImage.new(251, 5)
+    expect(image.empty?).to be_truthy
+  end
+
+  it 'is empty if has too many columns' do
+    image = BitmapImage.new(5, 251)
+    expect(image.empty?).to be_truthy
+  end
+
   it 'is not empty if has rows and columns' do
     image = BitmapImage.new(2, 5)
     expect(image.empty?).to be_falsey
@@ -35,30 +45,30 @@ describe 'bitmap_image' do
 
   it 'should start blank with size (1, 1)' do
     image = BitmapImage.new(1, 1)
-    expect(image.to_s).to eq '0'
+    expect(image.to_s).to eq 'O'
   end
 
   it 'should start blank with size (2, 1)' do
     image = BitmapImage.new(2, 1)
-    expect(image.to_s).to eq "0\n0"
+    expect(image.to_s).to eq "O\nO"
   end
 
   it 'should start blank with size (2, 2)' do
     image = BitmapImage.new(2, 2)
-    expect(image.to_s).to eq "00\n00"
+    expect(image.to_s).to eq "OO\nOO"
   end
 
   it 'should start blank with size n by n' do
     size = Random.rand(1...10)
     image = BitmapImage.new(size, size)
-    expect(image.to_s).to eq ("#{'0' * size}\n" * size).chomp
+    expect(image.to_s).to eq ("#{'O' * size}\n" * size).chomp
   end
 
   it 'should start blank with size n by m' do
     n = Random.rand(1...10)
     m = Random.rand(1...10)
     image = BitmapImage.new(n, m)
-    expect(image.to_s).to eq ("#{'0' * m}\n" * n).chomp
+    expect(image.to_s).to eq ("#{'O' * m}\n" * n).chomp
   end
 
   it 'does not crash if created with invalid parameters' do
@@ -67,8 +77,33 @@ describe 'bitmap_image' do
   end
 
   it 'should allow coloring a pixel' do
-    image = BitmapImage(3, 3)
-    expect(image.to_s).to eq "000\n000\n000"
+    image = BitmapImage.new(3, 3)
+    image.color_pixel(2, 2, 'r')
+    expect(image.to_s).to eq "OOO\nORO\nOOO"
+  end
+
+  it 'should not allow coloring a pixel with row out of bounds' do
+    image = BitmapImage.new(3, 3)
+    image.color_pixel(-2, 2, 'R')
+    expect(image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a pixel with column out of bounds' do
+    image = BitmapImage.new(3, 3)
+    image.color_pixel(2, -2, 'R')
+    expect(image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a pixel with row out of bounds for excess' do
+    image = BitmapImage.new(3, 3)
+    image.color_pixel(4, 2, 'R')
+    expect(image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a pixel with column out of bounds for excess' do
+    image = BitmapImage.new(3, 3)
+    image.color_pixel(2, 4, 'R')
+    expect(image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
 end

@@ -26,7 +26,7 @@ describe 'editor' do
     allow(@editor).to receive(:gets).and_return 'S'
     allow(@editor).to receive(:running?).and_return false
     expect(STDOUT).to receive(:puts).with('type ? for help').ordered
-    expect(STDOUT).to receive(:puts).with("000\n000\n000").ordered
+    expect(STDOUT).to receive(:puts).with("OOO\nOOO\nOOO").ordered
     @editor.run
   end
 
