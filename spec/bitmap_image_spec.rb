@@ -112,4 +112,12 @@ describe 'bitmap_image' do
     expect(image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
+  it 'should clear colored pixels' do
+    image = BitmapImage.new(3, 3)
+    image.color_pixel(2, 2, 'b')
+    expect(image.to_s).to eq "OOO\nOBO\nOOO"
+    image.clear
+    expect(image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
 end

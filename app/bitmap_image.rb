@@ -3,9 +3,9 @@ class BitmapImage
     rows = rows.to_i
     columns = columns.to_i
     if rows > 0 && rows <= 250 && columns > 0 && columns <= 250
-      @representation = []
+      @representation = Array.new(rows, 'O')
       (0...rows).each do |row|
-        @representation[row] = ['O'] * columns
+        @representation[row] = Array.new(columns, 'O')
       end
     else
       @representation = []
@@ -20,6 +20,15 @@ class BitmapImage
     end
     actual_row = @representation[row - 1]
     actual_row[column - 1] = color.upcase
+  end
+
+  def clear
+    (0...@representation.count).each do |row_index|
+      row = @representation[row_index]
+      (0...row.count).each do |column_index|
+        row[column_index] = 'O'
+      end
+    end
   end
 
   def empty?

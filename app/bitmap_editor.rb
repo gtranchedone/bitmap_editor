@@ -19,6 +19,8 @@ class BitmapEditor
           create_image params
         when 'L'
           color_pixel params
+        when 'C'
+          clear_image
         else
           puts 'unrecognised command :('
       end
@@ -53,6 +55,10 @@ class BitmapEditor
       else
         @image.color_pixel(params[1], params[2], params[3])
       end
+    end
+
+    def clear_image
+      @image.clear unless @image.nil?
     end
 
     def show_image
