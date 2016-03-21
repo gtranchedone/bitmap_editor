@@ -3,6 +3,12 @@ require_relative '../app/bitmap_image'
 
 describe 'bitmap_image' do
 
+  before do
+    @image = BitmapImage.new(3, 3)
+  end
+
+  # Initialization
+
   it 'is empty if has no rows' do
     image = BitmapImage.new(0, 5)
     expect(image.empty?).to be_truthy
@@ -71,54 +77,131 @@ describe 'bitmap_image' do
     expect(image.to_s).to eq ("#{'O' * m}\n" * n).chomp
   end
 
+  # Color Single Pixel
+
   it 'should allow coloring a pixel' do
-    image = BitmapImage.new(3, 3)
-    expect(image.color_pixel(2, 2, 'r')).to be_truthy
-    expect(image.to_s).to eq "OOO\nORO\nOOO"
+    expect(@image.color_pixel(2, 2, 'r')).to be_truthy
+    expect(@image.to_s).to eq "OOO\nORO\nOOO"
   end
 
-  it 'should not allow coloring a pixel with row out of bounds' do
-    image = BitmapImage.new(3, 3)
-    expect(image.color_pixel(-2, 2, 'R')).to be_falsey
-    expect(image.to_s).to eq "OOO\nOOO\nOOO"
+  it 'should not allow coloring a pixel with row < 0' do
+    expect(@image.color_pixel(-2, 2, 'R')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
-  it 'should not allow coloring a pixel with column out of bounds' do
-    image = BitmapImage.new(3, 3)
-    expect(image.color_pixel(2, -2, 'R')).to be_falsey
-    expect(image.to_s).to eq "OOO\nOOO\nOOO"
+  it 'should not allow coloring a pixel with column < 0' do
+    expect(@image.color_pixel(2, -2, 'R')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
-  it 'should not allow coloring a pixel with row out of bounds for excess' do
-    image = BitmapImage.new(3, 3)
-    expect(image.color_pixel(4, 2, 'R')).to be_falsey
-    expect(image.to_s).to eq "OOO\nOOO\nOOO"
+  it 'should not allow coloring a pixel with row > size' do
+    expect(@image.color_pixel(4, 2, 'R')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
-  it 'should not allow coloring a pixel with column out of bounds for excess' do
-    image = BitmapImage.new(3, 3)
-    expect(image.color_pixel(2, 4, 'R')).to be_falsey
-    expect(image.to_s).to eq "OOO\nOOO\nOOO"
+  it 'should not allow coloring a pixel with column > size' do
+    expect(@image.color_pixel(2, 4, 'R')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
   it 'should not allow coloring a pixel for non string colors' do
-    image = BitmapImage.new(3, 3)
-    expect(image.color_pixel(2, 3, 5)).to be_falsey
-    expect(image.to_s).to eq "OOO\nOOO\nOOO"
+    expect(@image.color_pixel(2, 3, 5)).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
   it 'should not allow coloring a pixel for colors represented by long strings' do
-    image = BitmapImage.new(3, 3)
-    expect(image.color_pixel(2, 3, 'ab')).to be_falsey
-    expect(image.to_s).to eq "OOO\nOOO\nOOO"
+    expect(@image.color_pixel(2, 3, 'ab')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
   it 'should clear colored pixels' do
-    image = BitmapImage.new(3, 3)
-    image.color_pixel(2, 2, 'b')
-    expect(image.to_s).to eq "OOO\nOBO\nOOO"
-    image.clear
-    expect(image.to_s).to eq "OOO\nOOO\nOOO"
+    @image.color_pixel(2, 2, 'b')
+    expect(@image.to_s).to eq "OOO\nOBO\nOOO"
+    @image.clear
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
+  # Color Horizontal Line
+
+  it 'should allow coloring a horizontal line' do
+    expect(@image.color_row(2, 1, 3, 'r')).to be_truthy
+    expect(@image.to_s).to eq "OOO\nRRR\nOOO"
+  end
+
+  it 'should allow to partially color a horizontal line' do
+    expect(@image.color_row(1, 1, 2, 'r')).to be_truthy
+    expect(@image.to_s).to eq "RRO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a horizontal line when row <= 0' do
+    expect(@image.color_row(0, 3, 3, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a horizontal line when row < size' do
+    expect(@image.color_row(4, 3, 3, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a horizontal line when start_column <= 0' do
+    expect(@image.color_row(1, 0, 3, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a horizontal line when start_column > size' do
+    expect(@image.color_row(1, 4, 3, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a horizontal line when end_column <= 0' do
+    expect(@image.color_row(1, 3, 0, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a horizontal line when end_column > size' do
+    expect(@image.color_row(1, 3, 4, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  # Color Vertical Line
+
+  it 'should allow coloring a vertical line' do
+    expect(@image.color_column(1, 1, 3, 'r')).to be_truthy
+    expect(@image.to_s).to eq "ROO\nROO\nROO"
+  end
+
+  it 'should allow to partially color a vertical line' do
+    expect(@image.color_column(2, 2, 3, 'r')).to be_truthy
+    expect(@image.to_s).to eq "OOO\nORO\nORO"
+  end
+
+  it 'should not allow coloring a vertical line when column <= 0' do
+    expect(@image.color_column(0, 3, 1, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a vertical line when column > size' do
+    expect(@image.color_column(4, 3, 1, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a vertical line when start_row <= 0' do
+    expect(@image.color_column(3, 0, 1, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a vertical line when start_row > size' do
+    expect(@image.color_column(3, 4, 1, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a vertical line when end_row <= 0' do
+    expect(@image.color_column(3, 1, 0, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
+
+  it 'should not allow coloring a vertical line when end_row > size' do
+    expect(@image.color_column(3, 1, 4, 'r')).to be_falsey
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+  end
 end
