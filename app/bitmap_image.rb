@@ -3,7 +3,6 @@ class BitmapImage
   DEFAULT_COLOR = 'O'
   VALID_COLOR_REGEX = /\A\D\z/
 
-  # A comment
   def initialize(rows, columns)
     if rows > 0 && rows <= MAX_SIZE && columns > 0 && columns <= MAX_SIZE
       @representation = Array.new(rows, DEFAULT_COLOR)
