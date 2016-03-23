@@ -212,13 +212,38 @@ describe 'bitmap_editor' do
     @editor.run
   end
 
-  it 'should color the correct range when performing the F command with valid input' do
-    create_3_by_3_image
-    prepare_for_command 'F 2 2 B'
+  it 'should color the correct range when performing the F command with valid input on a large image' do
+    create_5_by_6_image
+    prepare_for_command 'F 1 1 W'
     @editor.run
 
     prepare_for_command 'S'
-    expect(STDOUT).to receive(:puts).with("OBO\nBBB\nOBO").ordered
+    expect(STDOUT).to receive(:puts).with("WWWWW\nWWWWW\nWWWWW\nWWWWW\nWWWWW\nWWWWW").ordered
+    @editor.run
+  end
+
+  it 'should color the correct range when performing the F command with valid input' do
+    create_3_by_3_image
+    prepare_for_command 'H 1 3 1 B'
+    @editor.run
+
+    prepare_for_command 'F 2 2 R'
+    @editor.run
+
+    prepare_for_command 'S'
+    expect(STDOUT).to receive(:puts).with("BBB\nRRR\nRRR").ordered
+    @editor.run
+  end
+
+  it 'should not color not a region starting at a point out of bounds but should show the help instead' do
+    create_3_by_3_image
+    prepare_for_command 'F 4 4 V'
+    expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
+    expect(STDOUT).to receive(:puts).with(/Help/).ordered
+    @editor.run
+
+    prepare_for_command 'S'
+    expect(STDOUT).to receive(:puts).with("OOO\nOOO\nOOO").ordered
     @editor.run
   end
 end

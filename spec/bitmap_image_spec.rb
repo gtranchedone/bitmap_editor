@@ -232,48 +232,54 @@ describe 'bitmap_image' do
     expect(@image.to_s).to eq "OOO\nOOO\nOOO"
   end
 
-  it 'should color a region by coloring a pixel and its neighbours (center)' do
+  it 'should not color a region if the image is empty' do
+    @image = BitmapImage.new(0, 0)
+    expect(@image.color_region(2, 4, 'r')).to be_falsey
+    expect(@image.to_s).to eq 'Empty image'
+  end
+
+  it 'should color a region by coloring a pixel and recursively its neighbours with the same color (empty image)' do
+    expect(@image.to_s).to eq "OOO\nOOO\nOOO"
     expect(@image.color_region(2, 2, 'r')).to be_truthy
-    expect(@image.to_s).to eq "ORO\nRRR\nORO"
+    expect(@image.to_s).to eq "RRR\nRRR\nRRR"
   end
 
-  it 'should color a region by coloring a pixel and its neighbours (top left corner)' do
+  it 'should color a region by coloring a pixel and recursively its neighbours with the same color (empty large image)' do
+    @image = BitmapImage.new(5, 6)
+    expect(@image.to_s).to eq "OOOOOO\nOOOOOO\nOOOOOO\nOOOOOO\nOOOOOO"
     expect(@image.color_region(1, 1, 'r')).to be_truthy
-    expect(@image.to_s).to eq "RRO\nROO\nOOO"
+    expect(@image.to_s).to eq "RRRRRR\nRRRRRR\nRRRRRR\nRRRRRR\nRRRRRR"
   end
 
-  it 'should color a region by coloring a pixel and its neighbours (top right corner)' do
-    expect(@image.color_region(1, 3, 'r')).to be_truthy
-    expect(@image.to_s).to eq "ORR\nOOR\nOOO"
+  it 'should color a region by coloring a pixel and recursively its neighbours with the same color (one row pre-colored)' do
+    @image.color_row(1, 1, 3, 'B')
+    expect(@image.color_region(2, 2, 'r')).to be_truthy
+    expect(@image.to_s).to eq "BBB\nRRR\nRRR"
   end
 
-  it 'should color a region by coloring a pixel and its neighbours (bottom left corner)' do
-    expect(@image.color_region(3, 1, 'r')).to be_truthy
-    expect(@image.to_s).to eq "OOO\nROO\nRRO"
+  it 'should color a region by coloring a pixel and recursively its neighbours with the same color (corners only)' do
+    @image.color_pixel(1, 2, 'B')
+    @image.color_pixel(3, 2, 'B')
+    @image.color_pixel(2, 1, 'B')
+    @image.color_pixel(2, 3, 'B')
+    expect(@image.to_s).to eq "OBO\nBOB\nOBO"
+    expect(@image.color_region(2, 2, 'r')).to be_truthy
+    expect(@image.to_s).to eq "RBR\nBRB\nRBR"
   end
 
-  it 'should color a region by coloring a pixel and its neighbours (bottom right corner)' do
-    expect(@image.color_region(3, 3, 'r')).to be_truthy
-    expect(@image.to_s).to eq "OOO\nOOR\nORR"
-  end
-
-  it 'should color a region by coloring a pixel and its neighbours (middle top side)' do
-    expect(@image.color_region(1, 2, 'r')).to be_truthy
-    expect(@image.to_s).to eq "RRR\nORO\nOOO"
-  end
-
-  it 'should color a region by coloring a pixel and its neighbours (middle bottom side)' do
-    expect(@image.color_region(3, 2, 'r')).to be_truthy
-    expect(@image.to_s).to eq "OOO\nORO\nRRR"
-  end
-
-  it 'should color a region by coloring a pixel and its neighbours (middle left side)' do
-    expect(@image.color_region(2, 1, 'r')).to be_truthy
-    expect(@image.to_s).to eq "ROO\nRRO\nROO"
-  end
-
-  it 'should color a region by coloring a pixel and its neighbours (middle right side)' do
-    expect(@image.color_region(2, 3, 'r')).to be_truthy
-    expect(@image.to_s).to eq "OOR\nORR\nOOR"
+  it 'should color a region by coloring a pixel and recursively its neighbours with the same color (mixed)' do
+    @image = BitmapImage.new(7, 6)
+    @image.color_row(1, 1, 6, 'G')
+    @image.color_row(2, 1, 6, 'B')
+    @image.color_pixel(3, 3, 'G')
+    @image.color_pixel(3, 4, 'G')
+    @image.color_pixel(4, 5, 'G')
+    @image.color_pixel(5, 6, 'G')
+    @image.color_pixel(6, 1, 'G')
+    @image.color_row(6, 5, 6, 'G')
+    @image.color_row(7, 2, 4, 'G')
+    expect(@image.to_s).to eq "GGGGGG\nBBBBBB\nOOGGOO\nOOOOGO\nOOOOOG\nGOOOGG\nOGGGOO"
+    expect(@image.color_region(6, 1, 'R')).to be_truthy
+    expect(@image.to_s).to eq "GGGGGG\nBBBBBB\nOORROO\nOOOORO\nOOOOOR\nROOORR\nORRROO"
   end
 end

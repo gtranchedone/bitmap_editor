@@ -3,6 +3,7 @@ class BitmapImage
   DEFAULT_COLOR = 'O'
   VALID_COLOR_REGEX = /\A\D\z/
 
+  # A comment
   def initialize(rows, columns)
     if rows > 0 && rows <= MAX_SIZE && columns > 0 && columns <= MAX_SIZE
       @representation = Array.new(rows, DEFAULT_COLOR)
@@ -39,11 +40,14 @@ class BitmapImage
   end
 
   def color_region(row, column, color = 'O')
-    return false unless color_pixel row, column, color
-    color_pixel row - 1, column, color
-    color_pixel row, column - 1, color
-    color_pixel row + 1, column, color
-    color_pixel row, column + 1, color
+    return false if out_of_bounds? row, column
+    color_to_replace = color_at row, column
+    queue = [{row: row, column: column}]
+    until queue.empty?
+      coordinates = queue.shift
+      color_pixel coordinates[:row], coordinates[:column], color
+      visit_region(coordinates[:row], coordinates[:column], queue, color_to_replace)
+    end
     true
   end
 
@@ -87,5 +91,22 @@ class BitmapImage
         end
       end
       true
+    end
+
+    def color_at(row, column)
+      return nil if out_of_bounds?(row, column)
+      actual_row = @representation[row - 1]
+      actual_row[column - 1]
+    end
+
+    def visit_region(row, column, queue, color)
+      queue << { row: row - 1, column: column } if color_at(row - 1, column) == color
+      queue << { row: row, column: column - 1 } if color_at(row, column - 1) == color
+      queue << { row: row + 1, column: column } if color_at(row + 1, column) == color
+      queue << { row: row, column: column + 1 } if color_at(row, column + 1) == color
+      queue << { row: row - 1, column: column - 1 } if color_at(row - 1, column - 1) == color
+      queue << { row: row + 1, column: column + 1 } if color_at(row + 1, column + 1) == color
+      queue << { row: row - 1, column: column + 1 } if color_at(row - 1, column + 1) == color
+      queue << { row: row + 1, column: column - 1 } if color_at(row + 1, column - 1) == color
     end
 end

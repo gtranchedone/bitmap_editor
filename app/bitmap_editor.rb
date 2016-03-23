@@ -98,7 +98,9 @@ class BitmapEditor
         show_message_for_no_image
       else
         # parameters start with are column, row
-        @image.color_region(params[2].to_i, params[1].to_i, params[3])
+        unless @image.color_region(params[2].to_i, params[1].to_i, params[3])
+          show_invalid_params_help
+        end
       end
     end
 
