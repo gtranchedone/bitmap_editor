@@ -246,4 +246,46 @@ describe 'bitmap_editor' do
       @editor.run
     end
   end
+
+  context "when coloring a rectangle" do
+    it 'should not color not anything when first point is out of bounds but should show the help instead' do
+      create_3_by_3_image
+      prepare_for_command 'R 4 4 1 1 V'
+      expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
+      expect(STDOUT).to receive(:puts).with(/Help/).ordered
+      @editor.run
+
+      prepare_for_command 'S'
+      expect(STDOUT).to receive(:puts).with("OOO\nOOO\nOOO").ordered
+      @editor.run
+    end
+
+    it 'should not color not anything when second point is out of bounds but should show the help instead' do
+      create_3_by_3_image
+      prepare_for_command 'R 1 1 4 4 V'
+      expect(STDOUT).to receive(:puts).with(/Invalid parameters/).ordered
+      expect(STDOUT).to receive(:puts).with(/Help/).ordered
+      @editor.run
+
+      prepare_for_command 'S'
+      expect(STDOUT).to receive(:puts).with("OOO\nOOO\nOOO").ordered
+      @editor.run
+    end
+
+    it 'should not color the rect if the parameters are valid but no image was previously created' do
+      prepare_for_command 'R 1 1 3 3 V'
+      expect(STDOUT).to receive(:puts).with("ERROR: you haven't created an image yet!").ordered
+      @editor.run
+    end
+
+    it 'should stroke a rect using the passed in color if the parameters are valid' do
+      create_3_by_3_image
+      prepare_for_command 'R 1 1 3 3 V'
+      @editor.run
+
+      prepare_for_command 'S'
+      expect(STDOUT).to receive(:puts).with("VVV\nVOV\nVVV").ordered
+      @editor.run
+    end
+  end
 end

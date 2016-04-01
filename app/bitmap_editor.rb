@@ -25,6 +25,8 @@ class BitmapEditor
           color_column params
         when 'F'
           color_region params
+        when 'R'
+          color_rect params
         when 'C'
           clear_image
         else
@@ -104,6 +106,17 @@ class BitmapEditor
       end
     end
 
+    def color_rect(params)
+      if @image.nil?
+        show_message_for_no_image
+      else
+        # parameters start with are column1, row1, column2, row2, color
+        unless @image.color_rect(params[2].to_i, params[1].to_i, params[4].to_i, params[3].to_i, params[5])
+          show_invalid_params_help
+        end
+      end
+    end
+
     def clear_image
       @image.clear unless @image.nil?
     end
@@ -136,6 +149,8 @@ L X Y C - Colours the pixel (X,Y) with colour C.
 V X Y1 Y2 C - Draw a vertical segment of colour C in column X between rows Y1 and Y2 (inclusive).
 H X1 X2 Y C - Draw a horizontal segment of colour C in row Y between columns X1 and X2 (inclusive).
 F X Y C - Fill the region R with the colour C. R is defined as: Pixel (X,Y) belongs to R. Any other pixel which is the same colour as (X,Y) and shares a common side with any pixel in R also belongs to this region.
+R X1 Y1 X2 Y2 C - Draw a rectangle where (X1, Y1) and (X2, Y2) are the coordinates of two corners representing the
+rectangle and C is the color to use. A rectangle drawn this way is not filled.
 S - Show the contents of the current image
 X - Terminate the session'
     end
