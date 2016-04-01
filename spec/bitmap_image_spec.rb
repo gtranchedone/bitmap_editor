@@ -294,6 +294,16 @@ describe 'bitmap_image' do
   end
 
   context "when coloring a rect" do
+    it "should not color anything if the first point is out of bounds" do
+      expect(@image.color_rect(4, 4, 1, 1, 'r')).to be_falsey
+      expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+    end
+
+    it "should not color anything if the second point is out of bounds" do
+      expect(@image.color_rect(1, 1, 4, 4, 'r')).to be_falsey
+      expect(@image.to_s).to eq "OOO\nOOO\nOOO"
+    end
+
     it "should color a one pixel rect" do
       expect(@image.color_rect(1, 1, 1, 1, 'r')).to be_truthy
       expect(@image.to_s).to eq "ROO\nOOO\nOOO"
