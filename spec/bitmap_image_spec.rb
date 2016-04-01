@@ -292,4 +292,38 @@ describe 'bitmap_image' do
       expect(@image.to_s).to eq "GGGGGG\nBBBBBB\nOORROO\nOOOORO\nOOOOOR\nROOORR\nORRROO"
     end
   end
+
+  context "when coloring a rect" do
+    it "should color a one pixel rect" do
+      expect(@image.color_rect(1, 1, 1, 1, 'r')).to be_truthy
+      expect(@image.to_s).to eq "ROO\nOOO\nOOO"
+    end
+
+    it "should color a rect with a one pixel width" do
+      expect(@image.color_rect(1, 1, 3, 1, 'r')).to be_truthy
+      expect(@image.to_s).to eq "ROO\nROO\nROO"
+    end
+
+    it "should color a rect with a one pixel height" do
+      expect(@image.color_rect(1, 1, 1, 3, 'r')).to be_truthy
+      expect(@image.to_s).to eq "RRR\nOOO\nOOO"
+    end
+
+    it "should color a rect representing the image border without filling it" do
+      expect(@image.color_rect(1, 1, 3, 3, 'r')).to be_truthy
+      expect(@image.to_s).to eq "RRR\nROR\nRRR"
+    end
+
+    it "should color a rect not representing the image border without filling it" do
+      @image = BitmapImage.new(5, 5)
+      expect(@image.color_rect(2, 2, 4, 4, 'r')).to be_truthy
+      expect(@image.to_s).to eq "OOOOO\nORRRO\nORORO\nORRRO\nOOOOO"
+    end
+
+    it "should color a rect not representing the image border without filling it with reverse input" do
+      @image = BitmapImage.new(5, 5)
+      expect(@image.color_rect(4, 4, 2, 2, 'r')).to be_truthy
+      expect(@image.to_s).to eq "OOOOO\nORRRO\nORORO\nORRRO\nOOOOO"
+    end
+  end
 end

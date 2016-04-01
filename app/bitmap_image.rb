@@ -52,6 +52,13 @@ class BitmapImage
     true
   end
 
+  def color_rect(x1, y1, x2, y2, color = 'O')
+    color_column y1, x1, x2, color
+    color_column y2, x1, x2, color
+    color_row x1, y1, y2, color
+    color_row x2, y1, y2, color
+  end
+
   def clear
     (0...@representation.count).each do |row_index|
       row = @representation[row_index]
