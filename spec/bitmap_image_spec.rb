@@ -132,6 +132,11 @@ describe 'bitmap_image' do
       expect(@image.to_s).to eq "OOO\nRRR\nOOO"
     end
 
+    it 'should allow coloring a horizontal line with reverse input' do
+      expect(@image.color_row(2, 3, 1, 'r')).to be_truthy
+      expect(@image.to_s).to eq "OOO\nRRR\nOOO"
+    end
+
     it 'should allow to partially color a horizontal line' do
       expect(@image.color_row(1, 1, 2, 'r')).to be_truthy
       expect(@image.to_s).to eq "RRO\nOOO\nOOO"
@@ -171,6 +176,11 @@ describe 'bitmap_image' do
   context "when coloring a vertical line" do
     it 'should allow coloring a vertical line' do
       expect(@image.color_column(1, 1, 3, 'r')).to be_truthy
+      expect(@image.to_s).to eq "ROO\nROO\nROO"
+    end
+
+    it 'should allow coloring a vertical line with reverse imput' do
+      expect(@image.color_column(1, 3, 1, 'r')).to be_truthy
       expect(@image.to_s).to eq "ROO\nROO\nROO"
     end
 

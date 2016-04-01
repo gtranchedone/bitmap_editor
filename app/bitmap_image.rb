@@ -24,7 +24,8 @@ class BitmapImage
 
   def color_row(row, start_col, end_col, color = 'O')
     return false unless valid_params(row, start_col, color) && valid_params(row, end_col)
-    (start_col..end_col).each do |col|
+    start, finish = [start_col, end_col].sort
+    (start..finish).each do |col|
       color_pixel row, col, color
     end
     true
@@ -32,7 +33,8 @@ class BitmapImage
 
   def color_column(col, start_row, end_row, color = 'O')
     return false unless valid_params(start_row, col, color) && valid_params(end_row, col)
-    (start_row..end_row).each do |row|
+    start, finish = [start_row, end_row].sort
+    (start..finish).each do |row|
       color_pixel row, col, color
     end
     true
